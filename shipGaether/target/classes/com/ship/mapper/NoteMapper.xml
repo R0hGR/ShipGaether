@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ship.mapper.NoteMapper">
+
+   <select id="selectAll" resultType="Note">
+      select * from NOTE
+   </select>
+   <!--autoComplete -->
+   <select id="selectAutoNickname" parameterType="NoteSearchVO"
+      resultType="Note">
+      select * from (select NOTE_RECEIVER from NOTE where
+      NOTE_SENDER in (select CREW_NUM from CREW where USR_NUM=#{usrNum})
+      group by NOTE_RECEIVER) A join CREW B on A.NOTE_RECEIVER=B.CREW_NUM
+      where ${category} like '%'||#{keyword}||'%'
+   </select>
+
+   <!-- for PagingVO send total -->
+   <select id="selectCountSendNoteBySearch"
+      parameterType="NoteSearchVO" resultType="int">
+      <choose>
+         <when test="category == 'all'">
+            select count(*) from (select * from NOTE where
+            NOTE_SENDER in (select CREW_NUM from CREW where USR_NUM=#{usrNum}))
+            A join CREW B on A.NOTE_RECEIVER=B.CREW_NUM where CREW_NICKNAME like
+            '%'||#{keyword}||'%' or NOTE_CONTENT like '%'||#{keyword}||'%'
+         </when>
+         <otherwise>
+            select count(*) from (select * from NOTE where NOTE_SENDER
+            in (select CREW_NUM from CREW where USR_NUM=#{usrNum})) A join CREW
+            B on A.NOTE_RECEIVER=B.CREW_NUM where ${category} like
+            '%'||#{keyword}||'%'
+         </otherwise>
+      </choose>
+   </select>
+   <!-- for sendNotePaging -->
+   <select id="selectSendNoteBySearch" parameterType="PagingVO"
+      resultType="Note">
+      <choose>
+         <when test="category == 'all'">
+            select * from ( select ROWNUM RN, Z.* FROM ( select * from ( select * from
+            (select * from NOTE where NOTE_SENDER in (select CREW_NUM from CREW
+            where USR_NUM=#{usrNum})) A join CREW B on
+            A.NOTE_RECEIVER=B.CREW_NUM where A.NOTE_CONTENT like
+            '%'||#{keyword}||'%' or B.CREW_NICKNAME like '%'||#{keyword}||'%' )C
+            join SHIP D on C.SHIP_NUM=D.SHIP_NUM order by C.NOTE_WDATE desc ) Z
+            ) WHERE RN BETWEEN #{start} AND #{end}
+         </when>
+         <otherwise>
+            select * from ( select ROWNUM RN, Z.* FROM ( select * from ( select * from
+            (select * from NOTE where NOTE_SENDER in (select CREW_NUM from CREW
+            where USR_NUM=#{usrNum})) A join CREW B on
+            A.NOTE_RECEIVER=B.CREW_NUM where ${category} like
+            '%'||#{keyword}||'%' )C join SHIP D on C.SHIP_NUM=D.SHIP_NUM order
+            by C.NOTE_WDATE desc ) Z ) WHERE RN BETWEEN #{start} AND #{end}
+         </otherwise>
+      </choose>
+   </select>
+
+
+   <select id="getReceiveNoteCount" parameterType="NoteSearchVO"
+      resultType="int">
+      <choose>
+         <when test=" theme == 'all' ">
+            <if test=" category == 'all' ">
+               select count(*) from (select * from NOTE where NOTE_RECEIVER in (select
+               CREW_NUM from CREW where USR_NUM=#{usrNum})) A join CREW B on
+               A.NOTE_SENDER=B.CREW_NUM where CREW_NICKNAME like
+               '%'||#{keyword}||'%' or NOTE_CONTENT like '%'||#{keyword}||'%'
+            </if>
+            <if test=" category != 'all' ">
+               select count(*) from (select * from NOTE where NOTE_RECEIVER in (select
+               CREW_NUM from CREW where USR_NUM=#{usrNum})) A join CREW B on
+               A.NOTE_SENDER=B.CREW_NUM where ${category} like
+               '%'||#{keyword}||'%'
+            </if>
+
+         </when>
+         <when test=" theme == 'unRead' ">
+
+            <if test=" category == 'all' ">
+               select count(*) from (select * from NOTE where NOTE_RECEIVER in (select
+               CREW_NUM from CREW where USR_NUM=#{usrNum}) and NOTE_STATUS=0 ) A
+               join CREW B on A.NOTE_SENDER=B.CREW_NUM where CREW_NICKNAME like
+               '%'||#{keyword}||'%' or NOTE_CONTENT like '%'||#{keyword}||'%'
+            </if>
+            <if test=" category != 'all' ">
+               select count(*) from (select * from NOTE where NOTE_RECEIVER in (select
+               CREW_NUM from CREW where USR_NUM=#{usrNum}) and NOTE_STATUS=0 ) A
+               join CREW B on A.NOTE_SENDER=B.CREW_NUM where ${category} like
+               '%'||#{keyword}||'%'
+            </if>
+
+         </when>
+         <when test=" theme == 'read' ">
+
+            <if test=" category == 'all' ">
+               select count(*) from (select * from NOTE where NOTE_RECEIVER in (select
+               CREW_NUM from CREW where USR_NUM=#{usrNum}) and NOTE_STATUS=1 ) A
+               join CREW B on A.NOTE_SENDER=B.CREW_NUM where CREW_NICKNAME like
+               '%'||#{keyword}||'%' or NOTE_CONTENT like '%'||#{keyword}||'%'
+            </if>
+            <if test=" category != 'all' ">
+               select count(*) from (select * from NOTE where NOTE_RECEIVER in (select
+               CREW_NUM from CREW where USR_NUM=#{usrNum}) and NOTE_STATUS=1 ) A
+               join CREW B on A.NOTE_SENDER=B.CREW_NUM where ${category} like
+               '%'||#{keyword}||'%'
+            </if>
+
+         </when>
+      </choose>
+   </select>
+
+   <select id="selectReceiveNoteBySearch" parameterType="PagingVO"
+      resultType="Note">
+      <choose>
+         <when test=" theme == 'all' ">
+            <if test=" category == 'all' ">
+               select * from ( select ROWNUM RN, Z.* FROM ( select * from (
+               select * from (select * from NOTE where NOTE_RECEIVER in (select CREW_NUM
+               from CREW where USR_NUM=#{usrNum})) A join CREW B on
+               A.NOTE_SENDER=B.CREW_NUM where CREW_NICKNAME like
+               '%'||#{keyword}||'%'
+               or NOTE_CONTENT like '%'||#{keyword}||'%'
+               )C join SHIP D on C.SHIP_NUM=D.SHIP_NUM order by C.NOTE_WDATE desc )
+               Z )
+               WHERE RN BETWEEN #{start} AND #{end}
+            </if>
+            <if test=" category != 'all' ">
+               select * from ( select ROWNUM RN, Z.* FROM ( select * from (
+               select * from (select * from NOTE where NOTE_RECEIVER in (select CREW_NUM
+               from CREW where USR_NUM=#{usrNum})) A join CREW B on
+               A.NOTE_SENDER=B.CREW_NUM where ${category} like
+               '%'||#{keyword}||'%'
+               )C join SHIP D on C.SHIP_NUM=D.SHIP_NUM order by C.NOTE_WDATE desc )
+               Z )
+               WHERE RN BETWEEN #{start} AND #{end}
+            </if>
+         </when>
+         <when test=" theme == 'unRead' ">
+            <if test=" category == 'all' ">
+               select * from ( select ROWNUM RN, Z.* FROM ( select * from (
+               select * from (select * from NOTE where NOTE_RECEIVER in (select CREW_NUM
+               from CREW where USR_NUM=#{usrNum}) and NOTE_STATUS=0 ) A join CREW
+               B on
+               A.NOTE_SENDER=B.CREW_NUM where CREW_NICKNAME like '%'||#{keyword}||'%'
+               or NOTE_CONTENT like '%'||#{keyword}||'%'
+               )C join SHIP D on C.SHIP_NUM=D.SHIP_NUM order by C.NOTE_WDATE desc )
+               Z )
+               WHERE RN BETWEEN #{start} AND #{end}
+            </if>
+            <if test=" category != 'all' ">
+               select * from ( select ROWNUM RN, Z.* FROM ( select * from (
+               select * from (select * from NOTE where NOTE_RECEIVER in (select CREW_NUM
+               from CREW where USR_NUM=#{usrNum}) and NOTE_STATUS=0 ) A join CREW
+               B on
+               A.NOTE_SENDER=B.CREW_NUM where ${category} like '%'||#{keyword}||'%'
+               )C join SHIP D on C.SHIP_NUM=D.SHIP_NUM order by C.NOTE_WDATE desc )
+               Z )
+               WHERE RN BETWEEN #{start} AND #{end}
+            </if>
+         </when>
+         <when test=" theme == 'read' ">
+            <if test=" category == 'all' ">
+               select * from ( select ROWNUM RN, Z.* FROM ( select * from (
+               select * from (select * from NOTE where NOTE_RECEIVER in (select CREW_NUM
+               from CREW where USR_NUM=#{usrNum}) and NOTE_STATUS=1 ) A join CREW
+               B on
+               A.NOTE_SENDER=B.CREW_NUM where CREW_NICKNAME like '%'||#{keyword}||'%'
+               or NOTE_CONTENT like '%'||#{keyword}||'%'
+               )C join SHIP D on C.SHIP_NUM=D.SHIP_NUM order by C.NOTE_WDATE desc )
+               Z )
+               WHERE RN BETWEEN #{start} AND #{end}
+            </if>
+            <if test=" category != 'all' ">
+               select * from ( select ROWNUM RN, Z.* FROM ( select * from (
+               select * from (select * from NOTE where NOTE_RECEIVER in (select CREW_NUM
+               from CREW where USR_NUM=#{usrNum}) and NOTE_STATUS=1 ) A join CREW
+               B on
+               A.NOTE_SENDER=B.CREW_NUM where ${category} like '%'||#{keyword}||'%'
+               )C join SHIP D on C.SHIP_NUM=D.SHIP_NUM order by C.NOTE_WDATE desc )
+               Z )
+               WHERE RN BETWEEN #{start} AND #{end}
+            </if>
+         </when>
+      </choose>
+   </select>
+
+
+   <!-- for paging -->
+   <select id="selectCountMySendNote" parameterType="int"
+      resultType="int">
+      select count(*) from NOTE where NOTE_SENDER in (select
+      crew_num from crew where usr_num=#{usrNum})
+   </select>
+   <!-- paging -->
+   <select id="selectSendNotePaging" parameterType="PagingVO"
+      resultType="Note">
+      select * from ( select ROWNUM RN, Z.* FROM ( select * from (select * from
+      note A join CREW B on A.NOTE_RECEIVER = B.CREW_NUM where note_sender
+      in(select crew_num from crew where usr_num=#{usrNum}))C join SHIP D on
+      C.SHIP_NUM=D.SHIP_NUM order by C.NOTE_WDATE desc ) Z )
+      WHERE RN BETWEEN #{start} AND #{end}
+   </select>
+
+   <insert id="insertNote" parameterType="Note">
+      insert into NOTE
+      values(NOTE_SEQ.nextval,#{noteSender},#{noteReceiver},#{noteContent},0,SYSDATE)
+   </insert>
+
+   <update id="updateNote" parameterType="int">
+      update NOTE set
+      NOTE_STATUS=1 where NOTE_NUM=#{noteNum}
+   </update>
+
+   <delete id="deleteNote" parameterType="int">
+      delete from NOTE where
+      NOTE_NUM=#{noteNum}
+   </delete>
+
+
+</mapper> 

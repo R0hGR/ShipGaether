@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.ship.mapper.BoardGoodMapper">
+  
+  	<select id="selectAll" resultType="BoardGood">
+	    select * from BOARD_GOOD
+	</select>
+	<select id="selectAllCount" resultType="BoardGood">
+		select BOARD_NUM , count(*) count from BOARD_GOOD group by BOARD_NUM	
+	</select>
+		<select id="selectCount" resultType="BoardGood">
+		select BOARD_NUM , count(*) count from BOARD_GOOD where BOARD_NUM=#{boardNum} group by BOARD_NUM	
+	</select>
+	<insert id="insertBoardGood" parameterType="BoardGood">
+		insert into BOARD_GOOD values(BOARD_GOOD_SEQ.nextval,#{crewNum},#{boardNum})
+	</insert>
+	<delete id="deleteBoardGood" parameterType="BoardGood">
+		delete from BOARD_GOOD where CREW_NUM=#{crewNum} and BOARD_NUM=#{boardNum}
+	</delete>
+	
+ </mapper> 

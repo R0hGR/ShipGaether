@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.ship.mapper.OnlineUsrMapper">
+ 
+ 	<select id="selectOnlineUsr" parameterType="int" resultType="int">
+ 		select count(*) count from ONLINE_USR where USR_NUM=#{usrNum}
+ 	</select>
+  
+  	<select id="selectAll" resultType="OnlineUsr">
+	    select * from ONLINE_USR
+	</select>
+	
+	<insert id="insertOnlineUsr" parameterType="int">
+		insert into ONLINE_USR values(#{usrNum})
+	</insert>
+	
+	<delete id="deleteOnlineUsr">
+		delete from ONLINE_USR
+	</delete>	
+ </mapper> 

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ship.mapper.ReplyMapper">
+
+	<select id="selectThreeMonthsCountReply" parameterType="int"
+		resultType="Reply">
+		select to_char(REPLY_WDATE,'yyyy-mm') as month ,
+		count(to_char(REPLY_WDATE,'yyyy-mm')) as monthCount from Reply where
+		crew_num in( select crew_num from crew where ship_num = #{shipNum} )
+		and REPLY_WDATE between add_months(sysdate,-3) and sysdate group by
+		to_char(REPLY_WDATE,'yyyy-mm') order by 1
+	</select>
+	
+	<insert id="insertReply">
+		<choose>
+			<when test="bundleNum != 0">
+				insert into REPLY
+				values(REPLY_SEQ.nextval,#{crewNum},#{boardNum},#{bundleNum},#{bundleOrder},#{bundleDepth},#{replyContent},SYSDATE,0,SYSDATE,0,#{replyOpen})
+			</when>
+			<otherwise>
+				insert into REPLY
+				values(REPLY_SEQ.nextval,#{crewNum},#{boardNum},REPLY_SEQ.nextval,0,0,#{replyContent},SYSDATE,0,SYSDATE,0,#{replyOpen})
+			</otherwise>
+		</choose>
+	</insert>
+
+	<select id="selectAll" resultType="Reply">
+		select R.*, C.* from REPLY R join CREW C on R.CREW_NUM = C.CREW_NUM order by
+		BUNDLE_NUM ASC, BUNDLE_ORDER ASC
+	</select>
+
+	<select id="selectChildReplys" parameterType="int"
+		resultType="int">
+		select count(*) from REPLY where BUNDLE_NUM = #{replyNum}
+	</select>
+	<select id="selectReply" parameterType="int" resultType="Reply">
+		select *
+		from REPLY where BOARD_NUM=#{boardNum}
+	</select>
+	<select id="selectAllCount" resultType="REPLY">
+		select BOARD_NUM ,
+		count(*) count from REPLY group by BOARD_NUM
+	</select>
+	<update id="updateDeepReply" parameterType="Reply">		 	
+		<![CDATA[
+			update REPLY set BUNDLE_ORDER=BUNDLE_ORDER+1 where BUNDLE_NUM=#{bundleNum} and BUNDLE_ORDER>=#{bundleOrder}			  
+		]]>
+	</update>
+	<update id="updateReplyLikeDelete" parameterType="int">
+	
+		<![CDATA[
+		update REPLY set REPLY_CONTENT='<del>삭제된 댓글입니다.</del>' , REPLY_CHANGE=0 where REPLY_NUM=#{replyNum}
+		]]>
+	</update>
+
+	<delete id="deleteReply" parameterType="int">
+		delete from REPLY where
+		REPLY_NUM=#{replyNum}
+	</delete>
+
+	<update id="updateReply" parameterType="Reply">
+		update REPLY set
+		REPLY_CONTENT=#{replyContent} , REPLY_CHANGE=1 , REPLY_CDATE=default
+		where REPLY_NUM=#{replyNum}
+	</update>
+
+
+
+
+</mapper> 

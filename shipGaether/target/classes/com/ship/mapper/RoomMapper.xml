@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.ship.mapper.RoomMapper">
+ 	<select id="list" parameterType="int" resultType="Room">
+ 		select ROOM.* from ROOM, 
+ 		(select ROOM_ID, max(CHAT_ID) bb from CHATTING group by ROOM_ID order by bb desc) 
+ 		aa where ROOM.ROOM_MEMBER=#{roomMember} and ROOM.ROOM_ID=aa.ROOM_ID order by aa.bb desc
+ 	</select>
+ 	
+ 	<select id="roomInfo" parameterType="int" resultType="Room">
+ 		select * from ROOM where ROOM_ID = #{roomId}
+ 	</select>
+ 	<select id="maxRoomId" resultType="INTEGER">
+ 		select max(Room_id) from room
+ 	</select>
+ 	<insert id="insert"  parameterType="Room">
+ 		insert into ROOM values(ROOM_SEQ.nextval, #{roomId}, #{roomName}, #{roomMember})
+ 	</insert>
+ 	<delete id="delete"  parameterType="Map">
+ 		delete from ROOM where ROOM_ID=#{roomId} and ROOM_MEMBER=#{roomMember}
+ 	</delete>
+ 	
+ 	<update id="update" parameterType="Room">
+		update ROOM set ROOM_NAME=#{roomName} where ROOM_MEMBER=#{roomMember} and ROOM_ID=#{roomId} 
+	</update>
+</mapper>

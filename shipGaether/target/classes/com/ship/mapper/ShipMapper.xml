@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.ship.mapper.ShipMapper">
+  
+  	<select id="selectAll" resultType="Ship">
+	    select * from SHIP
+	</select>
+	
+	<select id="selectCountShip" resultType="int">
+		select count(*) from SHIP	
+	</select>
+	
+	<select id="selectRecShip" parameterType="PagingVO" resultType="Ship">
+		select * from (	select ROWNUM RN, A.* FROM ( SELECT * FROM SHIP ) A )
+		WHERE RN BETWEEN #{start} AND #{end}
+	
+	</select>
+	<select id="selectMyShip" parameterType="int" resultType="Ship">
+		select A.*, B.* ,B.USR_Num myUsrNum from SHIP A JOIN CREW B on A.SHIP_NUM = B.SHIP_NUM where A.ship_num in (select SHIP_NUM from CREW where USR_NUM=#{usrNum}) and B.USR_NUM = #{usrNum}
+	</select>
+	
+	<select id="selectMyBookmarkShip" parameterType="int" resultType="Ship">
+		select A.*, B.* , B.USR_Num myUsrNum from SHIP A JOIN CREW B on A.SHIP_NUM = B.SHIP_NUM where A.ship_num in (select SHIP_NUM from CREW where USR_NUM=#{usrNum}) and B.USR_NUM = #{usrNum} and B.CREW_BOOKMARK=1
+	</select>
+	
+	
+	
+
+	<select id="selectShipOfUsr" parameterType="int" resultType="Ship">
+		select * from SHIP where SHIP_NUM in (select SHIP_NUM FROM CREW where USR_NUM=#{usrNum})
+	</select>
+	
+	<select id="selectShipPeople" parameterType="int" resultType="Ship">
+		select a.SHIP_NAME , b.* from SHIP a ,(select SHIP_NUM, count(*) as people from CREW where SHIP_NUM in (select SHIP_NUM from CREW where USR_NUM=#{usrNum}) group by SHIP_NUM) b where a.SHIP_NUM=b.SHIP_NUM
+	</select>
+	
+	<insert id="insertNewShip" parameterType="Ship" useGeneratedKeys="true" keyColumn="SHIP_NUM" keyProperty="shipNum">	
+		<choose>
+			<when test="limitStatus > 0">
+				insert into SHIP values(SHIP_SEQ.nextval,#{shipName},#{shipTitle},'이 SHIP에 가입하시려는 이유가 무엇인가요?',#{shipCaptain},#{shipSample},#{shipSampleName},'shipPhotoName','default',#{cityNum},#{townNum},#{dongNum},#{limitStatus},#{limitStart},#{limitEnd},#{limitGender},default,#{shipOpen},DEFAULT,#{usrNum})
+			</when>
+			<otherwise>
+				insert into SHIP values(SHIP_SEQ.nextval,#{shipName},#{shipTitle},'이 SHIP에 가입하시려는 이유가 무엇인가요?',#{shipCaptain},#{shipSample},#{shipSampleName},'shipPhotoName','default',#{cityNum},#{townNum},#{dongNum},#{limitStatus},'1900/01/01','2200/12/31',#{limitGender},default,#{shipOpen},DEFAULT,#{usrNum})
+			</otherwise>
+		</choose>
+	</insert>
+	
+	<update id="updateShipPhoto" parameterType="ShipPhotoVO">
+		update SHIP set SHIP_PHOTO_NAME=#{shipPhotoName} where SHIP_NUM=#{shipNum}
+	</update>
+	
+	<update id="updateShipSampleUse" parameterType="int" >
+		update SHIP set SHIP_SAMPLE=1 where SHIP_NUM=#{shipNum}
+	</update>
+
+	<!-- 추가 -->
+	<select id="selectShip" parameterType="int" resultType="Ship">
+		select * from SHIP where SHIP_NUM=#{shipNum}
+	</select>
+
+	<delete id="deleteShip" parameterType="Ship">
+		delete from ship where
+		SHIP_NUM=#{shipNum} and USR_NUM=#{usrNum}
+	</delete>
+	
+	
+	<update id="updateShipName" parameterType="Ship">
+		update Ship set SHIP_NAME=#{updateThing} where ship_num=#{shipNum}	
+	</update>
+	<update id="updateShipTitle" parameterType="Ship">
+		update Ship set SHIP_TITLE=#{updateThing} where ship_num=#{shipNum}	
+	</update>	
+	<update id="updateShipSurvey" parameterType="Ship">
+		update Ship set SHIP_SURVEY=#{updateThing} where ship_num=#{shipNum}	
+	</update>		
+	
+	
+	<update id="updateShipCity" parameterType="Ship">
+		update Ship set CITY_NUM=#{cityNum}, TOWN_NUM=#{townNum}, DONG_NUM=#{dongNum} where ship_num=#{shipNum}	
+	</update>
+	<update id="updateShipLimitGender" parameterType="Ship">
+		update Ship set LIMIT_GENDER=#{updateThing} where ship_num=#{shipNum}	
+	</update>
+	<update id="updateShipOpen" parameterType="Ship">
+		update Ship set SHIP_OPEN=#{updateThing} where ship_num=#{shipNum}	
+	</update>
+	<update id="updateShipPhotoName" parameterType="Ship">
+		update Ship set SHIP_SAMPLE=1 , SHIP_PHOTO_NAME=#{updateThing} where ship_num=#{shipNum}
+	</update>
+	
+	<update id="updateShipPhotoNameSample" parameterType="Ship">
+		update Ship set SHIP_SAMPLE=0 , SHIP_SAMPLE_NAME=#{updateThing} where ship_num=#{shipNum}
+	</update>
+	
+	<update id="updateShipBannerName" parameterType="Ship">
+		update Ship set SHIP_BANNER_NAME=#{updateThing} where ship_num=#{shipNum}
+	</update>
+	
+	<update id="updateShipLimit" parameterType="Ship">
+		update Ship set LIMIT_STATUS=1 ,Limit_START=#{limitStart} ,Limit_END=#{limitEnd} where ship_num=#{shipNum}	
+	</update>
+	
+	<update id="updateNoShipLimit" parameterType="int">
+		update Ship set LIMIT_STATUS=0 where ship_num=#{shipNum}	
+	</update>
+	
+	<update id="updateShipCount" parameterType="int">
+		update Ship set SHIP_COUNT = SHIP_COUNT +1 where SHIP_NUM=#{shipNum}
+	</update>
+	
+	<update id="updateShipLocation" parameterType="Ship">
+		update Ship set CITY_NUM = #{cityNum}, TOWN_NUM = #{townNum}, DONG_NUM = #{dongNum} where SHIP_NUM=#{shipNum}
+	</update>
+	
+	<update id="updateShipCaptain" parameterType="Crew">
+		update Ship set SHIP_CAPTAIN =#{crewNickname} where SHIP_NUM=#{shipNum}
+	</update>
+	
+	
+
+ </mapper> 

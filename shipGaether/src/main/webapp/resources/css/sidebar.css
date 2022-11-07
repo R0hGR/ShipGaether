@@ -1,0 +1,140 @@
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+html {
+   
+  height: -webkit-fill-available;
+  max-height: 100vh; 
+}
+
+
+main {
+  height: 100vh;
+  height: -webkit-fill-available;
+  max-height: 100vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.dropdown-toggle { outline: 0; }
+
+.btn-toggle {
+  padding: .25rem .5rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, .65);
+  background-color: transparent;
+}
+.btn-toggle:hover,
+.btn-toggle:focus {
+  color: rgba(0, 0, 0, .85);
+  background-color: #d2f4ea;
+}
+
+.btn-toggle::before {
+  width: 1.25em;
+  line-height: 0;
+  content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%280,0,0,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+  transition: transform .35s ease;
+  transform-origin: .5em 50%;
+}
+
+.btn-toggle[aria-expanded="true"] {
+  color: rgba(0, 0, 0, .85);
+}
+.btn-toggle[aria-expanded="true"]::before {
+  transform: rotate(90deg);
+}
+
+.btn-toggle-nav a {
+  padding: .1875rem .5rem;
+  margin-top: .125rem;
+  margin-left: 1.25rem;
+}
+.btn-toggle-nav a:hover,
+.btn-toggle-nav a:focus {
+  background-color: #d2f4ea;
+}
+
+.scrollarea {
+  overflow-y: auto;
+}
+
+/* join css  ߰  */
+
+.join-cencel-btn, .join-btn {
+   width: 100px;
+   height: 40px;
+   border: 1px solid #B3B3B3;
+   opacity: .6;
+   
+}
+.join-btn {
+   background-color: #B3B3B3;
+   color: white;
+}
+.join-textarea {
+   width: 100%;
+    min-height: 200px;
+   display: inline-block;
+   overflow: hidden;
+   border: 1px solid #f0f0f0;
+   outline: none;
+   resize: none;
+   line-height: 1.54;
+   color: #333;
+   cursor: text;   
+   background-color: #FCFCFC;
+}
+.join-answer-modal-content {
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   background-color: white;
+   width: 400px;
+   height: 500px;
+   z-index: 5;
+}
+
+
+/* modify crew info */
+.crew-info-content,
+.note-modal-content {
+position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    width: 420px;
+    height: 570px;
+    z-index: 5;
+}
+.crew-info-layer {
+   position: fixed;
+   top: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(0, 0, 0, 0.5);
+   z-index: 4;
+}
+
+.crew-info-img-box{
+   position: relative;
+   
+    
+}
+.crew-info-img-box: hover{
+   pointer: cursor;
+}
+.crew-info-img-box img {
+   opacity: .5;
+}
+.crew-info-img-box i{
+   position: absolute;
+   right: 5px;
+    bottom: 20px;
+    color: #333;
+    pointer: cursor;
+}

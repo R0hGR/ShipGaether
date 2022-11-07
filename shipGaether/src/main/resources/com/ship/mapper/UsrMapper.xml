@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.ship.mapper.UsrMapper">
+  
+  
+<!-- select -->
+  	<select id="selectAll" resultType="Usr">
+	    select * from USR
+	</select>	
+	<select id="checkExistEmail" parameterType="String" resultType="int">
+		select count(*) FROM USR WHERE USR_EMAIL=#{usrEmail}	
+	</select>
+	<select id="checkExistPhone" parameterType="String" resultType="int">
+		select count(*) FROM USR WHERE USR_PHONE=#{usrPhone}
+	</select>	
+	<select id="checkExistId" parameterType="String" resultType="int">
+		select count(*) FROM USR WHERE USR_ID=#{usrId}
+	</select>
+	<select id="checkExistSocialUsr" parameterType="Usr" resultType="int">
+		select count(*) FROM USR WHERE USR_EMAIL=#{usrEmail} and USR_PWD=#{usrPwd}
+	</select>
+	
+	
+	<select id="checkIdWithPhone" parameterType="Usr" resultType="int">
+		select count(*) FROM USR WHERE USR_ID=#{usrId} and USR_PHONE=#{usrPhone}
+	</select>
+	<select id="login" parameterType="Usr" resultType="Usr">
+		select * FROM USR WHERE USR_ID=#{usrId} and USR_PWD=#{usrPwd}
+	</select>
+	<select id="usrInfo" parameterType="int" resultType="Usr">
+		select * from USR where USR_NUM=#{usrNum}
+	</select>
+	<select id="selectUsrNickname" parameterType="int" resultType="String">
+		select USR_NICKNAME from USR where USR_NUM=#{usrNum}
+	</select>
+	
+	<select id="findForgetId" parameterType="Usr"
+		resultType="String">
+		<choose>
+			<when test="usrEmail != null">
+				select USR_ID from USR where USR_Email=#{usrEmail}
+			</when>
+			<otherwise>
+				select USR_ID from USR where USR_Phone=#{usrPhone}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="selectKaKaoUsr" parameterType="Usr" resultType="Usr">
+		select * from USR where USR_Email=#{usrEmail} and USR_PWD=#{usrPwd}
+	</select>	
+	
+	<select id="select_Invite_Usr" parameterType="int" resultType="Usr">
+		select * from USR where USR_NUM not in(select USR_NUM from CREW where SHIP_NUM=#{shipNum})
+	</select>		
+	
+
+<!-- insert -->
+	<insert id="insertNewUsr" parameterType="Usr">
+		insert into USR values(USR_SEQ.nextval,#{usrId},#{usrEmail},#{usrPhone},#{usrPwd},#{usrName},#{usrNickname},#{usrBirth},#{usrGender},DEFAULT,DEFAULT,DEFAULT,'default',DEFAULT)
+	</insert>
+
+	<insert id="insertNewSNSUsr" parameterType="Usr">
+		insert Into USR values(USR_SEQ.nextval,#{usrId},#{usrEmail},#{usrPhone},#{usrPwd},#{usrNickname},#{usrNickname},'1900/01/01',#{usrGender},DEFAULT,DEFAULT,DEFAULT,#{usrPhotoPath},DEFAULT)
+	</insert>
+	<insert id="insertNewNaverUsr" parameterType="Usr">
+	</insert>
+	<insert id="insertNewGoogleUsr" parameterType="Usr">
+	</insert>
+	
+<!-- update -->	
+	<update id="updateUsrPwd" parameterType="Usr">
+		update USR set USR_PWD=#{usrPwd} where USR_ID=#{usrId} 
+	</update>
+	
+	<update id="updateUsrName" parameterType="Usr">
+		update USR set USR_NAME=#{updateThing} where USR_NUM=#{usrNum} 
+	</update>
+	
+	<update id="updateUsrNickname" parameterType="Usr">
+		update USR set USR_NICKNAME=#{updateThing} where USR_NUM=#{usrNum} 
+	</update>
+		
+	<update id="updateMyUsrBirth" parameterType="Usr">
+		update USR set USR_BIRTH=#{updateThing} where USR_NUM=#{usrNum} 
+	</update>
+		
+	<update id="updateMyUsrGender" parameterType="Usr">
+		update USR set USR_GENDER=#{updateThing} where USR_NUM=#{usrNum} 
+	</update>
+	
+		
+	<update id="updateMyUsrEmail" parameterType="Usr">
+		update USR set USR_EMAIL=#{updateThing} where USR_NUM=#{usrNum} 
+	</update>	
+	<update id="updateMyUsrPhone" parameterType="Usr">
+		update USR set USR_Phone=#{updateThing} where USR_NUM=#{usrNum} 
+	</update>	
+	<update id="updateMyUsrPwd" parameterType="Usr">
+		update USR set USR_PWD=#{updateThing} where USR_NUM=#{usrNum} 
+	</update>
+	
+	<update id="updateMyCity" parameterType="Usr">
+		update USR set USR_CITY=#{usrCity},USR_TOWN=#{usrTown} where USR_NUM=#{usrNum} 
+	</update>
+	
+	<update id="updateUsrPhotoPath" parameterType="Usr">
+		update USR set USR_PHOTO_PATH=#{usrPhotoPath} where USR_NUM=#{usrNum} 
+	</update>		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+ </mapper>

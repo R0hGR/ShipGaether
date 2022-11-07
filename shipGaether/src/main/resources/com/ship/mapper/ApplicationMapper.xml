@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.ship.mapper.ApplicationMapper">
+ 
+    <select id="selectMyIncompleteApp" resultType="Application">       
+       select * from APPLICATION A LEFT OUTER JOIN SHIP B on A.SHIP_NUM =B.SHIP_NUM  where A.USR_NUM=#{usrNum} and A.APP_STATUS=0
+    </select>
+  
+     <select id="selectAll" resultType="Application">
+       select * from APPLICATION
+   </select>
+   
+   <select id="selectMyAppOfShip" parameterType="Application" resultType="Application">
+      select * from APPLICATION where USR_NUM=#{usrNum} and SHIP_NUM=#{shipNum} and APP_STATUS=0   
+   </select>
+   
+   <insert id="insert" parameterType="Application">
+      insert into APPLICATION values(APPLICATION_SEQ.nextval,#{usrNum},#{shipNum},#{appAnswer},SYSDATE,default)
+   </insert>
+   
+   <select id="selectWithUsrByShipNum" parameterType="int" resultType="Application">      
+      select a.*,u.* from APPLICATION a join USR u on a.USR_NUM=u.USR_NUM where SHIP_NUM=#{shipNum} and APP_STATUS='0' order by APP_NUM asc
+   </select>
+   
+   <delete id="delete" parameterType="Application">
+      delete from APPLICATION where USR_NUM=#{usrNum} and SHIP_NUM=#{shipNum}
+   </delete>
+   
+   <update id="updateAppStatus" parameterType="int">
+      update APPLICATION set APP_STATUS=1 where APP_NUM=#{appNum}
+   </update>
+   
+   <delete id="deleteMyApp" parameterType="Application">
+      delete from APPLICATION where USR_NUM=#{usrNum} and SHIP_NUM=#{shipNum}   
+   </delete>
+
+ </mapper> 

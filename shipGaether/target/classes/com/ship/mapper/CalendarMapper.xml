@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.ship.mapper.CalendarMapper">
+	<select id="list" parameterType="int" resultType="Calendar">
+		SELECT CALENDAR_ID, CALENDAR_GROUP_ID, SHIP_NUM, USR_NUM, CALENDAR_TITLE, CALENDAR_WRITER, CALENDAR_CONTENT, TO_CHAR(CALENDAR_START1, 'YYYY-MM-DD"T"HH24:MI:SS') CALENDAR_START,
+		TO_CHAR(CALENDAR_END1, 'YYYY-MM-DD"T"HH24:MI:SS') CALENDAR_END,CALENDAR_ALL_DAY, CALENDAR_TEXT_COLOR, 
+		CALENDAR_BACKGROUND_COLOR, CALENDAR_BORDER_COLOR FROM CALENDAR where SHIP_NUM = #{shipNum}
+	</select>
+	
+	<select id="listUsr" parameterType="int" resultType="Calendar">
+		SELECT CALENDAR_ID, CALENDAR_GROUP_ID, SHIP_NUM, USR_NUM, CALENDAR_TITLE, CALENDAR_WRITER, CALENDAR_CONTENT, TO_CHAR(CALENDAR_START1, 'YYYY-MM-DD"T"HH24:MI:SS') CALENDAR_START,
+		TO_CHAR(CALENDAR_END1, 'YYYY-MM-DD"T"HH24:MI:SS') CALENDAR_END,CALENDAR_ALL_DAY, CALENDAR_TEXT_COLOR, 
+		CALENDAR_BACKGROUND_COLOR, CALENDAR_BORDER_COLOR FROM CALENDAR where USR_NUM = #{usrNum}
+	</select>
+	
+	<insert id="insert" parameterType="Calendar">
+ 		insert into CALENDAR values(CALENDAR_SEQ.nextval, CALENDAR_GROUP_ID_SEQ.nextval, #{shipNum}, #{usrNum}, #{calendarTitle}, #{calendarWriter}, 
+ 		#{calendarContent}, TO_DATE(#{calendarStart}, 'YYYY-MM-DD"T"HH24:MI'), TO_DATE(#{calendarEnd}, 'YYYY-MM-DD"T"HH24:MI'), #{calendarAllDay}, #{CalendarTextColor}, 
+ 		#{calendarBackgroundColor}, #{calendarBorderColor})
+ 	</insert>
+ 	
+ 	<delete id="delete" parameterType="int">
+ 		delete from CALENDAR where CALENDAR_ID = #{calendarId}
+ 	</delete>
+ 	
+ 	<update id="update" parameterType="Calendar">
+ 		update CALENDAR set CALENDAR_TITLE = #{calendarTitle}, CALENDAR_CONTENT = #{calendarContent},
+		CALENDAR_START1 = TO_DATE(#{calendarStart}, 'YYYY-MM-DD"T"HH24:MI'), 
+ 		CALENDAR_END1 = TO_DATE(#{calendarEnd}, 'YYYY-MM-DD"T"HH24:MI') where CALENDAR_ID = #{calendarId}
+ 	</update>
+</mapper>

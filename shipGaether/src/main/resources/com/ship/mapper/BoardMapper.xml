@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ship.mapper.BoardMapper">
+
+	<select id="selectThreeMonthsCountBoard" parameterType="int"
+		resultType="Board">
+		select to_char(board_wdate,'yyyy-mm') as month ,
+		count(to_char(board_wdate,'yyyy-mm')) as monthCount from board where
+		crew_num in( select crew_num from crew where ship_num = #{shipNum} )
+		and board_wdate between add_months(sysdate,-12) and sysdate group by
+		to_char(board_wdate,'yyyy-mm') order by 1
+	</select>
+
+	<select id="selectAll" resultType="Board">
+		select * from BOARD
+	</select>
+
+	<select id="selectByBoardView" resultType="Board">
+		<![CDATA[
+      select * from (select CREW_NUM, BOARD_NUM, BOARD_SUBJECT, BOARD_CONTENT, 
+      REGEXP_SUBSTR(board_content, '<img.*?">') as BOARD_IMG,
+      REGEXP_REPLACE(BOARD_CONTENT, '<[^>]*>|\&([^;])*;', '') as BOARD_TEXT, 
+      BOARD_VIEW, BOARD_GOOD, BOARD_REPLY, (BOARD_VIEW+BOARD_GOOD+BOARD_REPLY) as popular_count, 
+      ROW_NUMBER() over (order by (BOARD_VIEW+BOARD_GOOD+BOARD_REPLY) desc) as board_rank from BOARD order by BOARD_VIEW desc, BOARD_GOOD desc ,BOARD_REPLY desc) 
+      where board_rank<5
+   ]]>
+	</select>
+
+	<!-- selectAll 대신 첨부된 파일 갯수와 함께.. -->
+	<select id="selectAllwithFile" resultType="Board">
+		select B.* ,
+		NVL(F.BOARD_FILE_COUNT,0) BOARD_FILE_COUNT from BOARD B LEFT
+		OUTER JOIN
+		(select BOARD_NUM , COUNT(*) BOARD_FILE_COUNT from
+		BOARD_FILE where
+		BOARD_FILE_STATUS = 0 group by BOARD_NUM) F on
+		B.BOARD_NUM=F.BOARD_NUM
+	</select>
+
+	<select id="selectAutoBoardSubject"
+		parameterType="BoardSearchVO" resultType="Board">
+		select b.* , c.* from BOARD b
+		join CREW c on b.CREW_NUM=c.CREW_NUM where
+		c.SHIP_NUM=#{shipNum} and
+		board_subject like '%'||#{keyword}||'%'
+	</select>
+
+	<select id="selectBoardByCrewNickname"
+		parameterType="BoardSearchVO" resultType="Board">
+		select B.board_num , C.* from
+		board B LEFT OUTER JOIN (select crew_num ,
+		crew_nickname from crew C
+		where ship_num=#{shipNum}) C on
+		B.CREW_NUM=C.CREW_NUM where
+		C.CREW_NICKNAME like '%'||#{keyword}||'%'
+	</select>
+
+	<select id="selectBoardByBoardSubject"
+		parameterType="BoardSearchVO" resultType="Board">
+		select B.board_num ,
+		C.* from
+		board B LEFT OUTER JOIN (select crew_num , crew_nickname from
+		crew C
+		where ship_num=#{shipNum}) C on B.CREW_NUM=C.CREW_NUM where
+		B.BOARD_SUBJECT like '%'||#{keyword}||'%'
+	</select>
+
+	<select id="selectBoardByBoardContent"
+		parameterType="BoardSearchVO" resultType="Board">
+		select B.board_num ,
+		C.* from
+		board B LEFT OUTER JOIN (select crew_num , crew_nickname from
+		crew C
+		where ship_num=#{shipNum}) C on B.CREW_NUM=C.CREW_NUM where
+		B.BOARD_CONTENT like '%'||#{keyword}||'%'
+	</select>
+
+	<select id="selectBoardByBoardALL" parameterType="BoardSearchVO"
+		resultType="Board">
+		select B.board_num , C.* from board B LEFT OUTER
+		JOIN
+		(select crew_num , crew_nickname from crew C where
+		ship_num=#{shipNum}) C on B.CREW_NUM=C.CREW_NUM where B.BOARD_CONTENT
+		like '%'||#{keyword}||'%' or B.BOARD_SUBJECT like '%'||#{keyword}||'%'
+		or C.CREW_NICKNAME like '%'||#{keyword}||'%'
+	</select>
+
+
+	<select id="selectSurroundingBoardNum"
+		parameterType="BoardNumVO" resultType="BoardNumVO">select * from
+		(SELECT board_num,
+		LAG(board_num) OVER (ORDER BY board_num) preBoardNum,
+		LEAD(board_num)
+		OVER (ORDER BY board_num) nextBoardNum
+		FROM (select board_num from
+		board where crew_num in (select crew_num from
+		crew where
+		ship_num=#{shipNum}) order by board_wdate desc)
+		ORDER BY board_num
+		) B
+		where B.board_num=#{boardNum}
+	</select>
+
+
+
+
+
+
+	<select id="selectBoardOfShip" parameterType="int"
+		resultType="Board">
+		select C.* , NVL(F.BOARD_FILE_COUNT,0) boardFileCount from
+		(select B.* , C.CREW_NICKNAME , C.CREW_PHOTO from BOARD B join CREW C
+		on B.CREW_NUM=C.CREW_NUM where C.SHIP_NUM=#{shipNum} order by
+		B.BUNDLE_NUM DESC) C LEFT OUTER JOIN (select BOARD_NUM , COUNT(*)
+		BOARD_FILE_COUNT from BOARD_FILE where BOARD_FILE_STATUS = 0 group by
+		BOARD_NUM) F on C.BOARD_NUM=F.BOARD_NUM
+	</select>
+
+	<select id="selectBoardOfShipOrderBy"
+		parameterType="BoardSearchVO" resultType="Board">
+		select C.* ,
+		NVL(F.BOARD_FILE_COUNT,0) boardFileCount from (select B.* ,
+		C.CREW_NICKNAME , C.CREW_PHOTO from BOARD B join CREW C on
+		B.CREW_NUM=C.CREW_NUM where C.SHIP_NUM=#{shipNum} ) C LEFT OUTER JOIN
+		(select BOARD_NUM , COUNT(*) BOARD_FILE_COUNT from BOARD_FILE where
+		BOARD_FILE_STATUS = 0 group by BOARD_NUM) F on C.BOARD_NUM=F.BOARD_NUM
+		order by ${keyword} DESC
+	</select>
+
+
+	<insert id="insertNewBoard" parameterType="Board"
+		useGeneratedKeys="true" keyColumn="BOARD_NUM" keyProperty="boardNum">
+		insert into
+		BOARD
+		values(BOARD_SEQ.nextval,BOARD_SEQ.nextval,0,0,'삭제할거임',#{boardSubject},#{boardContent},0,SYSDATE,1,0,0,0,#{crewNum})
+	</insert>
+	<update id="updateBoard">
+		update BOARD set BOARD_SUBJECT=#{boardSubject} ,
+		BOARD_CONTENT=#{boardContent} , BOARD_CHANGE=1 where
+		BOARD_NUM=#{boardNum}
+	</update>
+
+
+
+	<delete id="deleteBoard" parameterType="int">
+		delete from BOARD where
+		BOARD_NUM = #{boardNum}
+	</delete>
+
+	<update id="updateBoardReply" parameterType="int">
+		update BOARD set
+		BOARD_REPLY=BOARD_REPLY+1 where BOARD_NUM=#{boardNum}
+	</update>
+
+	<update id="updateBoardGood" parameterType="int">
+		update BOARD set
+		BOARD_GOOD=BOARD_GOOD+1 where BOARD_NUM=#{boardNum}
+	</update>
+
+	<update id="updateBoardView" parameterType="int">
+		update BOARD set
+		BOARD_VIEW=BOARD_VIEW+1 where BOARD_NUM=#{boardNum}
+	</update>
+
+
+	<update id="resetBoardGood">
+		update BOARD set BOARD_GOOD=0
+	</update>
+
+	<update id="resetBoardReply">
+		update Board set board_reply=0
+	</update>
+
+	<update id="syncBoardGood" parameterType="BoardGood">
+		update BOARD set
+		BOARD_GOOD = #{count} where BOARD_NUM=#{boardNum}
+	</update>
+
+	<update id="syncBoardReply" parameterType="Reply">
+		update BOARD set
+		BOARD_REPLY = #{count} where BOARD_NUM=#{boardNum}
+	</update>
+
+	<select id="selectOneBoard" parameterType="int"
+		resultType="Board">
+		select B.* ,C.CREW_PHOTO, C.CREW_NICKNAME from BOARD B join
+		CREW C on
+		B.CREW_NUM=C.CREW_NUM where B.BOARD_NUM=#{boardNum}
+	</select>
+
+</mapper> 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.ship.mapper.TownMapper">
+  
+  	<select id="selectAll" resultType="Town">
+	    select * from TOWN
+	</select>
+	
+	<select id="getTown" parameterType="int" resultType="Town">
+	    select * from TOWN where CITY_NUM=#{cityNum}
+	</select>
+	
+ </mapper> 

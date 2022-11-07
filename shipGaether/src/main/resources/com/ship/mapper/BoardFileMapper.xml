@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.ship.mapper.BoardFileMapper">
+ 
+ 
+   <!-- 첨부파일게시판 -->
+    <select id="selectDocumentFile" parameterType="int" resultType="BoardFile">       
+       select * from board_file where board_file_status=1 and board_num in (select board_Num from board where crew_num in (select crew_num from crew where ship_num=#{shipNum})) order by BOARD_FILE_UDATE desc
+    </select>
+    
+    <select id="selectFileDate" parameterType="int" resultType="BoardFile">       
+       select distinct board_File_Udate from (select TO_DATE(board_File_Udate,'YYYY-MM-DD') board_File_Udate , count(*) from board_file where board_file_status=1 and board_num in(select board_Num from board where crew_num in (select crew_num from crew where ship_num=#{shipNum})) group by board_file_udate)
+    </select>
+ 
+    <select id="selectAllFile" resultType="BoardFile">
+       select * from BOARD_FILE where BOARD_FILE_STATUS = 0   
+    </select>
+    
+<!-- 맨처음 쉽 입장시 게시글에 썸네일 뿌려줄라고 -->
+    <select id="selectCountFile" resultType="BoardFile">       
+       select BOARD_NUM , COUNT(*) count from BOARD_FILE  where BOARD_FILE_STATUS = 0 group by BOARD_NUM
+    </select>
+    
+    <select id="selectCountAllDocumentFile" resultType="BoardFile">
+       select BOARD_NUM , COUNT(*) count from BOARD_FILE  where BOARD_FILE_STATUS = 1 group by BOARD_NUM
+    </select>
+    
+    <select id="selectFileInfo" parameterType="String" resultType="BoardFile">
+       select * from BOARD_FILE where BOARD_FILE_SAVE_NAME=#{boardFileSaveName}
+    </select>
+    
+    <select id="selectBoardFileSaveName" parameterType="int" resultType="BoardFile">
+      select * from BOARD_FILE where BOARD_NUM=#{boardNum}
+   </select>
+   
+   <select id="selectRecentlyBoardFile" parameterType="int" resultType="BoardFile">
+      select * from board_file where board_num in (select board_num from board where crew_num in (select crew_num from crew where ship_Num=#{shipNum})) and board_file_status = 0 order by board_file_udate desc   
+   </select>
+   
+   
+   <select id="selectAlbum" parameterType="int" resultType="BoardPhotoVO">
+      select * from 
+(select * from board_file where board_num in (select board_num from board where crew_num in (select crew_num from crew where ship_Num=#{shipNum})) and board_file_status = 0 order by board_file_udate desc) A join
+Board B using(board_num)    
+   </select>    
+ 
+    <insert id="insertPhotoFile" parameterType="BoardFile" >
+      insert into BOARD_FILE values(BOARD_FILE_SEQ.nextval,#{boardFileName},#{boardFileSaveName},#{boardFileSize},SYSDATE,#{boardFileStatus},#{boardNum})   
+   </insert>
+   <delete id="deleteFile" parameterType="String">
+      delete from BOARD_FILE where BOARD_FILE_SAVE_NAME=#{boardFileSaveName}   
+   </delete>   
+ </mapper> 

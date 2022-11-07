@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ship.mapper.CrewMapper">
+
+	<select id="selectThreeMonthsCountNewCrew" parameterType="int"
+		resultType="Crew">
+		select to_char(CREW_JDATE,'yyyy-mm') as month ,
+		count(to_char(CREW_JDATE,'yyyy-mm')) as monthCount from Crew where
+		ship_num = #{shipNum} and CREW_JDATE between add_months(sysdate,-3)
+		and sysdate group by to_char(CREW_JDATE,'yyyy-mm') order by 1
+	</select>
+	
+	<select id="selectAll" resultType="Crew">
+		select * from CREW
+	</select>
+	<select id="selectCrew" parameterType="int" resultType="Crew">
+		select * from CREW where CREW_NUM=#{crewNum}
+	</select>
+
+	<insert id="insertCrew">
+		insert into CREW
+		values(CREW_SEQ.nextval,#{usrNum},#{shipNum},#{crewRole},#{crewBookmark},SYSDATE,default,#{crewNickname})
+	</insert>
+
+	<insert id="insert_Add_Crew" parameterType="Crew">
+		insert into CREW
+		values(CREW_SEQ.nextval,#{usrNum},#{shipNum},default,default,SYSDATE,default,#{crewNickname})
+	</insert>
+
+	<select id="selectShipCrew" parameterType="int"
+		resultType="Crew">
+		select * from CREW where SHIP_NUM=#{shipNum} order by 1 asc
+	</select>
+
+	<select id="selectCrewInfo" parameterType="Crew"
+		resultType="Crew">
+		select * from CREW where USR_NUM=#{usrNum} and SHIP_NUM=#{shipNum}
+	</select>
+
+	<select id="selectAutoNickname" parameterType="Crew"
+		resultType="Crew">
+		select * from CREW where CREW_NICKNAME like '%'||#{crewNickname}||'%' and
+		SHIP_NUM=#{shipNum}
+	</select>
+
+	<select id="selectOnlineCrew" parameterType="Crew"
+		resultType="Crew">
+		select * from CREW where SHIP_NUM=#{shipNum} and USR_NUM=#{usrNum}
+	</select>
+
+
+	<delete id="deleteCrew" parameterType="int">
+		delete from CREW where
+		CREW_NUM=#{crewNum}
+	</delete>
+
+
+	<update id="updateCrewNickname" parameterType="Crew">
+		update CREW set
+		CREW_NICKNAME=#{crewNickname} where CREW_NUM=#{crewNum}
+	</update>
+	<update id="updateCrewPhoto" parameterType="Crew">
+		update CREW set
+		CREW_PHOTO=#{crewNickname} where CREW_NUM=#{crewNum}
+	</update>
+
+	<update id="updateBookmarkOn" parameterType="Crew">
+		update CREW set
+		CREW_BOOKMARK=1 where usr_num=#{usrNum} and SHIP_NUM=#{shipNum}
+	</update>
+
+	<update id="updateBookmarkOff" parameterType="Crew">
+		update CREW set
+		CREW_BOOKMARK=0 where usr_num=#{usrNum} and SHIP_NUM=#{shipNum}
+	</update>
+
+
+
+
+
+</mapper> 

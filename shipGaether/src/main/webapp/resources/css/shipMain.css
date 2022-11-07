@@ -1,0 +1,418 @@
+@charset "UTF-8";
+
+html {
+    overflow-y:scroll;
+}
+
+a {
+   text-decoration: none;
+   !
+   important
+}
+
+a:hover {
+   text-decoration: none;
+   !
+   important
+}
+
+a:visited {
+   text-decoration: none;
+   !
+   important
+}
+
+ul {
+   list-style:none;
+   padding-left:0px;
+   
+}
+.none-border-btn {
+   border-style: none;
+   background-color: rgba(0, 0, 0, 0);
+}
+.reply-write-box {
+   border-radius: 35px;
+   border: 1px solid rgba(0, 0, 0, .2);
+   height: 35px;
+}
+
+.reply-write-textarea {
+   display: inline-block;
+   overflow: hidden;
+   height: 30px;
+   border: none;
+   outline: none;
+   resize: none;
+   line-height: 1.54;
+   font-size: 13px;
+   text-align: left;
+   overflow-wrap: break-word;
+   white-space: pre-wrap;
+   vertical-align: center;
+   color: #333;
+}
+
+.reply-submit-btn {
+   background-color: #B3B3B3;
+   border-radius: 17px;
+   border-style: none;
+   font-size: 13px;
+   height: 35px;
+   width: 50px;
+}
+.reply-writer {
+   color: black;
+   width: 70%;
+}
+
+.reply-profile {
+   color: #B3B3B3;
+   width: 45px;
+   height: 45px;
+}
+ 
+.reply-read-name {
+   border: 0;
+   background-color: transparent;
+   border-radius: 0;   
+   opacity: .7;
+} 
+
+.write-modal-content {
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   background-color: white;
+   width: 600px;
+   height: 750px;
+   z-index: 5; 
+}
+
+.write-modal-layer {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(0, 0, 0, 0.5);
+   z-index: 4;
+}
+
+.write-modal-box, .join-answer-modal-box {
+   height: 100%;
+   width: 100%;
+}
+
+.write-modal-close-i,
+.crew-info-modal-close-i,
+.note-modal-close-i {
+   position: absolute;
+   right: 30px;
+   top: 20px;
+   color: #B3B3B3;
+   cursor: pointer;
+}
+
+.write-modal-textarea  {
+   
+   height: 480px;
+   display: inline-block;
+   overflow: auto; 
+   border: none;
+   outline: none;
+   resize: none;
+   line-height: 1.54;
+   color: #333;
+   cursor: text;
+   width: -webkit-fill-available;
+   /*    text-align: left; 
+   overflow-wrap: break-word; 
+   white-space: pre-wrap; */
+}
+
+
+.note-modal-textarea {
+   height: 280px;
+   width: 95%;
+   display: inline-block;
+   overflow: auto; 
+   border: none;
+   outline: none;
+   resize: none;
+   line-height: 1.54;
+   color: #333;
+   cursor: text;
+       text-align: left; 
+   overflow-wrap: break-word; 
+   white-space: pre-wrap; 
+   
+}
+
+.write-modal-submit-btn {
+   background-color: #B3B3B3;
+   border-radius: 12px;
+   border-style: none;
+   font-size: 13px;
+   height: 35px;
+   width: 80px;
+   color: white;
+}
+
+/* read-modal */
+
+.read-modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    width: 600px;
+    height: 900px;
+    z-index: 3001;
+}
+
+.read-modal-layer {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(0, 0, 0, 0.5);
+   z-index: 3000;
+}
+
+.read-modal-box, .join-answer-modal-box {
+   height: 100%;
+   width: 100%;
+}
+
+.read-modal-close-i {
+   position: absolute;
+   right: 30px;
+   top: 20px;
+   color: #B3B3B3;
+   cursor: pointer;
+}
+
+.read-modal-textarea { 
+   height: 700px; 
+   width: 95%;
+   display: inline-block;
+   overflow: auto; 
+   border: none;
+   outline: none;
+   resize: none;
+   line-height: 1.54;
+   color: #333;
+   cursor: text;
+   /*    text-align: left; 
+   overflow-wrap: break-word; 
+   white-space: pre-wrap; */
+}
+
+.read-modal-submit-btn {
+   background-color: #B3B3B3;
+   border-radius: 12px;
+   border-style: none;
+   font-size: 13px;
+   height: 35px;
+   width: 80px;
+   color: white;
+}
+
+/* update-modal */
+
+.update-modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    width: 600px;
+    height: 900px;
+    z-index: 3001;
+}
+
+.update-modal-layer {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(0, 0, 0, 0.5);
+   z-index: 3000;
+}
+
+.update-modal-box, .join-answer-modal-box {
+   height: 100%;
+   width: 100%;
+}
+
+.update-modal-close-i {
+   position: absolute;
+   right: 30px;
+   top: 20px;
+   color: #B3B3B3;
+   cursor: pointer;
+}
+
+.update-modal-textarea { 
+   height: 480px;  
+   width: 95%;
+   display: inline-block;
+   overflow: auto; 
+   border: none;
+   outline: none;
+   resize: none;
+   line-height: 1.54;
+   color: #333;
+   cursor: text;
+   /*    text-align: left; 
+   overflow-wrap: break-word; 
+   white-space: pre-wrap; */
+}
+
+.update-modal-submit-btn {
+   background-color: #B3B3B3;
+   border-radius: 12px;
+   border-style: none;
+   font-size: 13px;
+   height: 35px;
+   width: 80px;
+   color: white;
+}
+
+
+.border-line-top {
+   border-top: 1px solid #f0f0f0;
+}
+.border-line-bottom { 
+   border-bottom: 1px solid #f0f0f0;
+}
+.border-line-both {
+   border-top: 1px solid #f0f0f0;
+   border-bottom: 1px solid #f0f0f0;
+}
+.border-around {
+   border: 1px solid #B3B3B3;
+
+   
+}
+.btn-more, .btn-reply-more, .btn-reply-reply-more {
+   position: absolute;
+   right: 7px;
+   top: 17px;
+   width: 20px;
+   opacity: .3;
+   border-style:none;
+   cursor: pointer;
+
+}
+
+.sub-box, .main-inside-box {
+   position: relative;
+}
+
+.cog-i {
+   color: #B3B3B3;
+}
+.btn-upload {
+   cursor: pointer;
+}
+.btn-upload i{
+   font-size: 25px;
+}
+
+.more-content{
+   opacity: .7;   
+}
+
+.eye-i-box {
+   position: absolute;
+   right: 20px;
+   bottom: 10px;
+   opacity: .3;
+   width: 20px;
+} 
+  
+.good-i-box {
+    position: absolute;
+    /* right: 20px; */
+    bottom: 10px;
+    opacity: .7;
+    width: 100%;
+}
+
+/* 추가 */
+.board-note-menu-box,
+.reply-note-menu-box,
+.reply-reply-note-menu-box  {
+   z-index: 5;  
+   position: absolute;
+    left: 140px;
+    top: 33px;
+    height: auto;
+    width: 153px;  
+    border: 1px solid #333;
+    padding: 7px;
+    background-color: white;
+    height: auto;
+    width: 100px;
+}
+
+.others-post-menu-box, .post-menu-box,
+.others-reply-menu-box, .reply-menu-box,
+.others-reply-reply-menu-box, .reply-reply-menu-box  {
+   z-index: 5;  
+   position: absolute;
+    right: 27px;
+    top: 46px; 
+    height: auto;
+    width: 153px;  
+    border: 1px solid #333;
+    padding: 7px;
+    background-color: white;
+}
+
+
+.others-reply-menu-box, .reply-menu-box,
+.others-reply-reply-menu-box, .reply-reply-menu-box {
+   height: auto;
+}
+.reply-menu-box, reply-reply-menu-box {
+   width: 100px;
+}
+
+/* 추가 */
+.others-post-menu-box >ul >li >a,
+.post-menu-box >ul >li >a,
+.others-reply-menu-box >ul >li >a, 
+.reply-menu-box >ul >li >a,
+.others-reply-reply-menu-box >ul >li >a,
+.reply-reply-menu-box >ul >li >a,
+.board-note-menu-box >ul >li >a,
+.reply-note-menu-box >ul >li >a,
+.reply-reply-note-menu-box >ul >li >a {
+   display: block;
+    min-height: 37px;
+    padding: 10px;
+    line-height: 1;
+    text-align: left;
+    white-space: nowrap;
+    font-size: 13px;
+    color: #333;   
+} 
+    
+
+.img-input, .video-input, .file-input {
+   position: absolute;
+    width: 33px;
+    height: 33px;
+    padding: 0;
+    margin: -8px;
+    overflow: hidden;
+    border: 0;
+   opacity: 0;
+}

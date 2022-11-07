@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.ship.mapper.ReplyGoodMapper">
+  
+  	<select id="selectAll" resultType="ReplyGood">
+	    select * from REPLY_GOOD
+	</select>
+	
+	<select id="selectAllCount" resultType="ReplyGood">
+		select REPLY_NUM , count(*) count from REPLY_GOOD group by REPLY_NUM
+	</select>
+	
+	<select id="selectCount" parameterType="int" resultType="ReplyGood">
+		select REPLY_NUM , count(*) count from REPLY_GOOD where REPLY_NUM=#{replyNum} group by REPLY_NUM 
+	</select>
+	
+	<insert id="insertReplyGood" parameterType="ReplyGood">
+		insert into REPLY_GOOD values(REPLY_GOOD_SEQ.nextval,#{crewNum},#{replyNum})
+	</insert>
+	
+	<delete id="deleteReplyGood" parameterType="ReplyGood">
+		delete from REPLY_GOOD where CREW_NUM=#{crewNum} and REPLY_NUM=#{replyNum}
+	</delete>
+	
+ </mapper> 

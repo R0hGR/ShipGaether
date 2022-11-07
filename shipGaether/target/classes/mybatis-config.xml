@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<!-- 	스네이크 케이스 >> 카멜 케이스	예를들어 USR_NUM 컬럼을 usrNum으로 바꿔줌 -->
+  <settings>
+    <setting name="mapUnderscoreToCamelCase" value="true"/>
+    <setting name="cacheEnabled" value="false" />
+    <setting name="jdbcTypeForNull" value="NULL" />
+  </settings>
+
+
+	<!-- 테이블 ResultType 을 매핑해주는 값임-->
+<!-- 	원래 type에 있는값을 resultType으로 해줘야하는데 알리야스로 짧게 대체가능 -->
+	<typeAliases>
+		<typeAlias alias="Usr" type="com.ship.domain.Usr" />
+		<typeAlias alias="Crew" type="com.ship.domain.Crew" />
+		<typeAlias alias="Note" type="com.ship.domain.Note" />
+		<typeAlias alias="Application" type="com.ship.domain.Application" />
+		<typeAlias alias="Ship" type="com.ship.domain.Ship" />
+		<typeAlias alias="Survey" type="com.ship.domain.Survey" />
+		<typeAlias alias="City" type="com.ship.domain.City" />
+		<typeAlias alias="Town" type="com.ship.domain.Town" />
+		<typeAlias alias="Board" type="com.ship.domain.Board" />
+		<typeAlias alias="Reply" type="com.ship.domain.Reply" />
+		<typeAlias alias="Report" type="com.ship.domain.Report" />
+		<typeAlias alias="BoardGood" type="com.ship.domain.BoardGood" />
+		<typeAlias alias="ReplyGood" type="com.ship.domain.ReplyGood" />
+		<typeAlias alias="Meet" type="com.ship.domain.Meet" />
+		<typeAlias alias="Registration" type="com.ship.domain.Registration" />
+		<typeAlias alias="Notification" type="com.ship.domain.Notification" />	
+		<typeAlias alias="Chat" type="com.ship.domain.Chat" />
+		<typeAlias alias="Room" type="com.ship.domain.Room" />				
+		<typeAlias alias="Calendar" type="com.ship.domain.Calendar" />
+		<typeAlias alias="ShipPhoto" type="com.ship.domain.ShipPhoto" />
+		<typeAlias alias="BoardFile" type="com.ship.domain.BoardFile" />
+		<typeAlias alias="ShipPhotoVO" type="com.ship.util.ShipPhotoVO" />
+		<typeAlias alias="PagingVO" type="com.ship.util.PagingVO" />
+		<typeAlias alias="OnlineUsr" type="com.ship.domain.OnlineUsr" />
+		<typeAlias alias="BoardSearchVO" type="com.ship.util.BoardSearchVO" />
+		<typeAlias alias="NoteSearchVO" type="com.ship.util.NoteSearchVO" />
+        <typeAlias alias="BoardNumVO" type="com.ship.util.BoardNumVO" />
+        <typeAlias alias="BoardPhotoVO" type="com.ship.util.BoardPhotoVO" />
+		<typeAlias alias="Dong" type="com.ship.domain.Dong" />
+		<typeAlias alias="Notice" type="com.ship.domain.Notice" />
+	</typeAliases>
+
+<!-- 	위 Alias들을 어디에서 쓸건지 아래 -->
+	<mappers>
+		<mapper resource="com/ship/mapper/UsrMapper.xml" />
+		<mapper resource="com/ship/mapper/CrewMapper.xml" />
+		<mapper resource="com/ship/mapper/NoteMapper.xml" />
+		<mapper resource="com/ship/mapper/ApplicationMapper.xml" />
+		<mapper resource="com/ship/mapper/ShipMapper.xml" />
+		<mapper resource="com/ship/mapper/SurveyMapper.xml" />
+		<mapper resource="com/ship/mapper/CityMapper.xml" />
+		<mapper resource="com/ship/mapper/TownMapper.xml" />
+		<mapper resource="com/ship/mapper/BoardMapper.xml" />
+		<mapper resource="com/ship/mapper/ReplyMapper.xml" />
+		<mapper resource="com/ship/mapper/ReportMapper.xml" />
+		<mapper resource="com/ship/mapper/BoardGoodMapper.xml" />
+		<mapper resource="com/ship/mapper/ReplyGoodMapper.xml" />
+		<mapper resource="com/ship/mapper/MeetMapper.xml" />
+		<mapper resource="com/ship/mapper/RegistrationMapper.xml" />
+		<mapper resource="com/ship/mapper/NotificationMapper.xml" />
+		<mapper resource="com/ship/mapper/ChatMapper.xml" />
+		<mapper resource="com/ship/mapper/RoomMapper.xml" />
+		<mapper resource="com/ship/mapper/CalendarMapper.xml" />
+		<mapper resource="com/ship/mapper/ShipPhotoMapper.xml" />
+		<mapper resource="com/ship/mapper/BoardFileMapper.xml" />		
+		<mapper resource="com/ship/mapper/OnlineUsrMapper.xml" />
+		<mapper resource="com/ship/mapper/DongMapper.xml" />
+		<mapper resource="com/ship/mapper/NoticeMapper.xml" />
+
+	</mappers>
+</configuration>
